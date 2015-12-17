@@ -67,6 +67,8 @@ abscellLoc = '/home/jacob/research/dwarfs/abscells/individual/'
 gasboxLoc = '/home/jacob/research/dwarfs/gasfiles/'
 linesLoc = '/home/jacob/research/dwarfs/lines/'
 
+outf = open('ratios.out', 'w')
+
 for ion in ion_list:
 
     print ion
@@ -149,7 +151,6 @@ for ion in ion_list:
             # Get the average distance between pairs of 
             # absorbing cells for a LOS
             # Loop over LOS
-            ratiof = open('ratio.out', 'w')
             for i in range(0,len(numalong)):
             
                 numberofCells = int(numalong[i])
@@ -192,7 +193,6 @@ for ion in ion_list:
                         try:
                             r = pointsCorrelation[j]/randCorrelation[j]
                             if not math.isnan(r) and not math.isinf(r):
-                                ratiof.write('{0:f}\t{1:f}\t{2:f}\n'.format(pointsCorrelation[j], randCorrelation[j],r))
                                 ratio[j] += r
                             
                         except RuntimeWarning:
@@ -206,7 +206,7 @@ for ion in ion_list:
 
     print ratio
     averageL = sum(avelengths)/len(avelengths)
-    print 'Average LOS lenght: {0:f}'.format(averageL)
+    print 'Average LOS length: {0:f}'.format(averageL)
     binlims = []
     binsteps = averageL/numbins
     for i in range(0,numbins):
@@ -224,15 +224,21 @@ for ion in ion_list:
 #    ax.set_xlabel('Distance [kpc]')
 #    ax.set_ylabel('Ratio')
 
-    plt.plot(binlims, ratio, label=ion)
+    plt.plot(binlims, ratio, 'x-', label=ion)
     plt.xlabel('Distance [kpc]')
     plt.ylabel('Ratio')
     
+    outf.write('\b{0:s}\n'.format(ion))
+    for i in range(0,len(ratio)):
+        outf.write('{0:f}\t{1:f}\n'.format(binlims[i], ratio[i]))
 
+outf.close()
+
+plt.yscale('log')
+plt.legend(frameon=False, loc='upper left')
 #plt.tight_layout()
-s = 'clumping.pdf'
+s = 'clumping_log.pdf'
 plt.savefig(s)
-
 
 
 
