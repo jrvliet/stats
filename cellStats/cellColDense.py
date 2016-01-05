@@ -42,4 +42,4 @@ for ax, ion in zip(axes,ionList):
     
 
 
-plt.savefig('colDenseHist.png')
+plt.savefig('colDenseHist.pdf')
